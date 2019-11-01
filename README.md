@@ -1,7 +1,6 @@
 # ai-final-project
 
-COMP.4200 Artificial Intelligence
-
+COMP.4200 Artificial Intelligence,
 University of Massachusetts Lowell
 
 Final Project: Reinforcement Learning and Genetic Algorithms
