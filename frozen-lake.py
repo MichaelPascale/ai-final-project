@@ -54,6 +54,7 @@ for episode in range(episodes):
             action = env.action_space.sample()
 
         new_state, reward, done, info = env.step(action)
+        env.render()
 
         qtable[state, action] = qtable[state, action] * (1 - l_rate) + l_rate * (reward + d_rate * numpy.max(qtable[new_state, :]))
 
@@ -65,7 +66,7 @@ for episode in range(episodes):
 
     # episode ends
     # exploration rate decays
-    min_e_rate + (max_e_rate - min_e_rate) * numpy.exp(-e_decay_rate * episode)
+    e_rate = min_e_rate + (max_e_rate - min_e_rate) * numpy.exp(-e_decay_rate * episode)
     all_rewards.append(rewards)
 
 # all episodes done
