@@ -10,11 +10,11 @@ class QLearner:
     def __init__(self, env, episodes, steps_per_episode):
         self.env = env
         self.n_actions = env.action_space.n
-        self.n_states  = env.observation_space.n 
+        self.n_states  = env.observation_space.n
         self.n_episodes = episodes
         self.n_steps = steps_per_episode
         self.qtable = []
-    
+
     # Performance Statistics
     # Tuple of:
     #   List of average total reward per X episodes.
@@ -27,9 +27,9 @@ class QLearner:
 
     # Run a session of n_episodes.
     # Returns performance statistics.
-    dev run_session(epsilon, alpha, gamma):
+    def run_session(epsilon, alpha, gamma):
         pass
-    
+
     # Reset the agent to zero-knowledge.
     def reset():
         pass
