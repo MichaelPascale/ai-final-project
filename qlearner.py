@@ -22,14 +22,14 @@ class QLearner:
 
     # Run a single learning episode.
     # Returns performance statistics.
-    def run_episode(epsilon, alpha, gamma):
+    def run_episode(self, epsilon, alpha, gamma):
         pass
 
     # Run a session of n_episodes.
     # Returns performance statistics.
-    def run_session(epsilon, alpha, gamma):
+    def run_session(self, epsilon, alpha, gamma):
         pass
 
     # Reset the agent to zero-knowledge.
-    def reset():
+    def reset(self):
         pass
