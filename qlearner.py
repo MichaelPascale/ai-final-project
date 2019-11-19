@@ -34,22 +34,22 @@ class QLearner:
             actions = [action for action in range(self.n_actions)]
             return random.choice(actions)
         else:
-            return self.Q[self.prev_state, self.prev_action]
+            return max([a for a in range(self.n_actions)], key = lambda a : self.Q[self.prev_state][a])
 
 
     # Update function, core q-learning algorithm.
-    def update(self, s, a, r, alpha, gamma):
-        self.Q[s][a] = self.Q[s][a] + alpha * self.N[s][a] * (r + gamma * max(self.Q[s][:]))
+    def update(self, s, a, r, alpha, gamma): # * self.N[s][a] *
+        self.Q[s][a] = self.Q[s][a] + alpha * (r + gamma * max(self.Q[s][:]))
         print(self.Q)
 
     # Run a single learning episode.
     # Returns performance statistics.
     def run_episode(self, epsilon, alpha, gamma):
 
-        self.env.reset()
+        self.prev_state = self.env.reset()
 
         for _ in range(self.n_steps):
-            action = self.env.action_space.sample()
+            action = self.explore(epsilon)
             state, reward, done, info = self.env.step(action)
             if done:
                 self.update(state, action, reward, alpha, gamma)
@@ -64,7 +64,7 @@ class QLearner:
 
     # Run a session of n_episodes.
     # Returns performance statistics.
-    def run_session(self, epsilon = 0.5, alpha = 0.5, gamma = 0.99):
+    def run_session(self, epsilon = 0.5, alpha = 0.5, gamma = 1):
         
         self.reset()
         self.env.reset()
@@ -78,4 +78,3 @@ class QLearner:
         self.prev_state = None
         self.prev_action = None
         self.prev_reward = None
-        pass
