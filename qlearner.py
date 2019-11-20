@@ -67,7 +67,8 @@ class QLearner:
         for _ in range(self.n_episodes):
             self.run_episode(epsilon, alpha, gamma)
         
-        print(self.run_episode(epsilon, alpha, gamma))
+        #print(self.run_episode(epsilon, alpha, gamma))
+        return self.run_episode(epsilon, alpha, gamma)
 
 
     # Reset the agent to zero-knowledge.
