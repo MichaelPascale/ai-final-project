@@ -16,15 +16,15 @@ class Particle():
         # self.position = np.array([randrange(minRange, maxRange, 1)*0.01,randrange(minRange, maxRange, 1)*0.01])
         self.position = np.array([uniform(minRange, maxRange), uniform(minRange, maxRange)])
         self.velocity = np.array([0,0])
-        self.fitness = float("inf")
+        self.fitness = float("-inf")
         self.bestPosition = self.position
-        self.bestFitness = float('inf')
+        self.bestFitness = float('-inf')
         self.min = minRange
         self.max = maxRange
     
 	# Prints the particle 
     def __str__(self):
-        print("Particle is at ", self.position, " my best position is ", self.bestPosition)
+        print("Particle at", self.position, " best position: ", self.bestPosition, " best fitness: ", self.bestFitness, " V = ", self.velocity)
         
 	# Moves a single particle 
     def move(self):
@@ -49,6 +49,7 @@ class ParticleSwarm():
         
         # Inertia 
         self.w = 0.729
+        #self.w = 0.95
         # personal weight
         self.c1 = 1.49445
         # global weight
@@ -71,9 +72,9 @@ class ParticleSwarm():
         # Handles Initializing PSO space
         self.numParticles = numParticles
         self.particles = []
-        self.global_best_fitness = float('inf')
+        self.global_best_fitness = float('-inf')
         # self.global_best_position = np.array([randrange(minRange,maxRange,1)*0.01,randrange(minRange,maxRange,1)*0.01])
-        self.global_best_position = np.array([float('inf'),float('inf')])
+        self.global_best_position = np.array([float('-inf'),float('-inf')])
 
 	# Simply displays a list of particles and their position
     def display_particles(self):
@@ -95,8 +96,8 @@ class ParticleSwarm():
     def set_personal_best(self):
         for particle in self.particles:   
             # CHANGES IF YOU WANT TO FIND MINIMUM OR MAXIMUM
-            # it is set to minimum 
-            if (particle.fitness < particle.bestFitness):
+            # it is set to maximum 
+            if (particle.fitness > particle.bestFitness):
                 particle.bestFitness = particle.fitness
                 particle.bestPosition = particle.position
                 
@@ -104,8 +105,8 @@ class ParticleSwarm():
     def set_global_best(self):
         for particle in self.particles:      
             # CHANGES IF YOU WANT TO FIND MINIMUM OR MAXIMUM
-            # it is set to minimum 
-            if (particle.fitness < self.global_best_fitness):
+            # it is set to maximum 
+            if (particle.fitness > self.global_best_fitness):
                 self.global_best_fitness = particle.fitness
                 self.global_best_position = particle.position
             
