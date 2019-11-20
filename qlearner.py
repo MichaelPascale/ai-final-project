@@ -16,11 +16,11 @@ class QLearner:
         self.n_episodes = episodes
         self.n_steps = steps_per_episode
         
-        self.Q = None
-        self.N = None
-        self.prev_state = None
-        self.prev_action = None
-        self.prev_reward = None
+        self.Q = [[0.0 for _ in range(self.n_actions)] for _ in range(self.n_states)]
+        self.s = None
+        self.a = None
+        self.r = None
+
 
     # Performance Statistics
     # Tuple of:
@@ -28,7 +28,7 @@ class QLearner:
     #   What else do we want from this to analyze?
     
     # Decides exploration-exploitation.
-    # Returns an action.
+    # Returns an action; either does so randomly or by selecting maximum Q.
     def explore(self, epsilon):
         if self.Q is None or random.random() >= epsilon:
             actions = [action for action in range(self.n_actions)]
@@ -38,19 +38,18 @@ class QLearner:
 
 
     # Update function, core q-learning algorithm.
-    def update(self, s, a, r, alpha, gamma): # * self.N[s][a] *
-        self.Q[s][a] = self.Q[s][a] + alpha * (r + gamma * max(self.Q[s][:]))
-        print(self.Q)
+    def update(self, s, a, r, alpha, gamma):
+        self.Q[s][a] += alpha * (r + gamma * max(self.Q[s][:]))
+
 
     # Run a single learning episode.
     # Returns performance statistics.
     def run_episode(self, epsilon, alpha, gamma):
-
-        self.prev_state = self.env.reset()
+        self.s = self.env.reset()
 
         for _ in range(self.n_steps):
             action = self.explore(epsilon)
-            state, reward, done, info = self.env.step(action)
+            state, reward, done, _ = self.env.step(action)
             if done:
                 self.update(state, action, reward, alpha, gamma)
                 break
@@ -58,14 +57,14 @@ class QLearner:
 
             self.update(state, action, reward, alpha, gamma)
 
-            self.prev_state = state
-            self.prev_action = action
-            self.prev_reward = reward
+            self.s = state
+            self.a = action
+            self.r = reward
+
 
     # Run a session of n_episodes.
     # Returns performance statistics.
     def run_session(self, epsilon = 0.5, alpha = 0.5, gamma = 1):
-        
         self.reset()
         self.env.reset()
         for _ in range(self.n_episodes):
@@ -74,7 +73,6 @@ class QLearner:
     # Reset the agent to zero-knowledge.
     def reset(self):
         self.Q = [[0.0 for _ in range(self.n_actions)] for _ in range(self.n_states)]
-        self.N = [[0.0 for _ in range(self.n_actions)] for _ in range(self.n_states)]
-        self.prev_state = None
-        self.prev_action = None
-        self.prev_reward = None
+        self.s = None
+        self.a = None
+        self.r = None
