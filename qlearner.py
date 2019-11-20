@@ -7,7 +7,7 @@ import random
 
 class QLearner:
     # Initialize the q-learning agent to...
-    def __init__(self, env, episodes = 100, steps_per_episode = 100):
+    def __init__(self, env, episodes = 999, steps_per_episode = 100):
         random.seed()
 
         self.env = env
@@ -19,7 +19,6 @@ class QLearner:
         self.Q = [[0.0 for _ in range(self.n_actions)] for _ in range(self.n_states)]
         self.s = None
         self.a = None
-        self.r = None
 
 
     # Performance Statistics
@@ -30,49 +29,49 @@ class QLearner:
     # Decides exploration-exploitation.
     # Returns an action; either does so randomly or by selecting maximum Q.
     def explore(self, epsilon):
-        if self.Q is None or random.random() >= epsilon:
+        if random.random() >= epsilon:
             actions = [action for action in range(self.n_actions)]
             return random.choice(actions)
         else:
-            return max([a for a in range(self.n_actions)], key = lambda a : self.Q[self.prev_state][a])
+            return max([a for a in range(self.n_actions)], key = lambda a : self.Q[self.s][a])
 
 
     # Update function, core q-learning algorithm.
-    def update(self, s, a, r, alpha, gamma):
-        self.Q[s][a] += alpha * (r + gamma * max(self.Q[s][:]))
+    def update(self, s_, r_, alpha, gamma):
+        self.Q[self.s][self.a] += alpha * (r_ + gamma * max(self.Q[s_][:]) - self.Q[self.s][self.a])
 
 
     # Run a single learning episode.
-    # Returns performance statistics.
     def run_episode(self, epsilon, alpha, gamma):
         self.s = self.env.reset()
 
         for _ in range(self.n_steps):
-            action = self.explore(epsilon)
-            state, reward, done, _ = self.env.step(action)
+            self.a = self.explore(epsilon)
+            s_, r_, done, _ = self.env.step(self.a)
             if done:
-                self.update(state, action, reward, alpha, gamma)
+                self.update(s_, r_, alpha, gamma)
                 break
             #self.env.render()
 
-            self.update(state, action, reward, alpha, gamma)
+            self.update(s_, r_, alpha, gamma)
 
-            self.s = state
-            self.a = action
-            self.r = reward
+            self.s = s_
+        
+        return sum(sum(self.Q, []))
 
 
     # Run a session of n_episodes.
-    # Returns performance statistics.
-    def run_session(self, epsilon = 0.5, alpha = 0.5, gamma = 1):
+    def run_session(self, epsilon = 0.2, alpha = 0.9, gamma = 0.90):
         self.reset()
-        self.env.reset()
+
         for _ in range(self.n_episodes):
             self.run_episode(epsilon, alpha, gamma)
+        
+        print(self.run_episode(epsilon, alpha, gamma))
+
 
     # Reset the agent to zero-knowledge.
     def reset(self):
         self.Q = [[0.0 for _ in range(self.n_actions)] for _ in range(self.n_states)]
         self.s = None
         self.a = None
-        self.r = None
