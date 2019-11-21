@@ -7,7 +7,7 @@ import random
 
 class QLearner:
     # Initialize the q-learning agent to...
-    def __init__(self, env, episodes = 999, steps_per_episode = 100):
+    def __init__(self, env, episodes = 2000, steps_per_episode = 100):
         random.seed()
 
         self.env = env
@@ -44,10 +44,11 @@ class QLearner:
     # Run a single learning episode.
     def run_episode(self, epsilon, alpha, gamma):
         self.s = self.env.reset()
-
+        total_R = 0
         for _ in range(self.n_steps):
             self.a = self.explore(epsilon)
             s_, r_, done, _ = self.env.step(self.a)
+            total_R += r_
             if done:
                 self.update(s_, r_, alpha, gamma)
                 break
@@ -57,18 +58,20 @@ class QLearner:
 
             self.s = s_
         
-        return sum(sum(self.Q, []))
+        #print(total_R)
+        return total_R #sum(sum(self.Q, []))
 
 
     # Run a session of n_episodes.
     def run_session(self, epsilon = 0.2, alpha = 0.9, gamma = 0.90):
         self.reset()
 
-        for _ in range(self.n_episodes):
-            self.run_episode(epsilon, alpha, gamma)
-        
+        # Return the average reward over all episodes.
         #print(self.run_episode(epsilon, alpha, gamma))
-        return self.run_episode(epsilon, alpha, gamma)
+        R = [self.run_episode(epsilon, alpha, gamma) for _ in range(self.n_episodes)]
+        avg = sum(R) / len(R)
+        #print(R)
+        return avg
 
 
     # Reset the agent to zero-knowledge.
