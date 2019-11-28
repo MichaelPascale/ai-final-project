@@ -7,6 +7,7 @@ import numpy as np
 from random import seed
 from random import randrange
 from random import uniform
+from dataplotter import DataPlotter
 
 class Particle():
 
@@ -45,6 +46,9 @@ class Particle():
 
 class ParticleSwarm():
     def __init__(self, eval, numParticles, numIterations, minRange, maxRange):
+	# Initializes data collection object
+	self.data = DataPlotter()
+
         # Initializes PSO algorithm values 
         
         # Inertia 
@@ -100,6 +104,7 @@ class ParticleSwarm():
             if (particle.fitness > particle.bestFitness):
                 particle.bestFitness = particle.fitness
                 particle.bestPosition = particle.position
+		
                 
 	# Acquires the best position out of all particles
     def set_global_best(self):
@@ -116,7 +121,6 @@ class ParticleSwarm():
             self.r1 = randrange(0,100,1)*0.01
             self.r2 = randrange(0,100,1)*0.01
 
-			# v(t+1) = (w * v(t)) + (c1 * r1 * (p(t) – x(t)) + (c2 * r2 * (g(t) – x(t))
             new_velocity = (self.w * particle.velocity) + (self.c1 * self.r1 * (particle.bestPosition - particle.position)) + \
                             (self.c2 * self.r2 * (self.global_best_position - particle.position))
 
@@ -133,22 +137,25 @@ class ParticleSwarm():
             self.set_global_best()
             self.move_particles()
             self.iteration += 1
+	    self.data.appendToList(self.iteration,self.global_best_fitness,"fitness")
             print("iteration number ", self.iteration)
             self.display_particles()
             print("\n")
+	
+	self.data.outputGraphs()
 
         print("The best position is ", self.global_best_position, "in iteration number ", self.iteration)
 
 
-""" if __name__ == "__main__":
+if __name__ == "__main__":
 
     # Setup the PSO algorithm and run
-    state_space = ParticleSwarm((lambda a, b : 3 + a ** 2 + b**2), 5, 100, -100, 100)
+    state_space = ParticleSwarm((lambda a, b : 300 + a ** 2 + b**2), 5, 100, -100, 100)
     particles_vector = [Particle(-100, 100) for _ in range(state_space.numParticles)]
     state_space.particles = particles_vector
     state_space.display_particles()
     print("\n")
-    state_space.algorithm() """
+    state_space.algorithm()
 
 
 
