@@ -12,20 +12,19 @@ from dataplotter import DataPlotter
 class Particle():
 
 	# Initializes the particle itself
-    def __init__(self, minRange, maxRange):
-        seed()
-        # self.position = np.array([randrange(minRange, maxRange, 1)*0.01,randrange(minRange, maxRange, 1)*0.01])
-        self.position = np.array([uniform(minRange, maxRange), uniform(minRange, maxRange)])
+    def __init__(self, minRange, maxRange):        
+	# self.position = np.array([randrange(minRange, maxRange, 1)*0.01,randrange(minRange, maxRange, 1)*0.01])
+        self.position = np.array([randrange(minRange, maxRange, 1),randrange(minRange, maxRange, 1)])
         self.velocity = np.array([0,0])
-        self.fitness = float("-inf")
+        self.fitness = float("inf")
         self.bestPosition = self.position
-        self.bestFitness = float('-inf')
+        self.bestFitness = float('inf')
         self.min = minRange
         self.max = maxRange
     
 	# Prints the particle 
     def __str__(self):
-        print("Particle at", self.position, " best position: ", self.bestPosition, " best fitness: ", self.bestFitness, " V = ", self.velocity)
+        print("Particle is at ", self.position, " my best position is ", self.bestPosition)
         
 	# Moves a single particle 
     def move(self):
@@ -45,15 +44,13 @@ class Particle():
             
 
 class ParticleSwarm():
-    def __init__(self, eval, numParticles, numIterations, minRange, maxRange):
-	# Initializes data collection object
-	self.data = DataPlotter()
-
+    def __init__(self, numParticles, numIterations, minRange, maxRange):
+	# Initializes the data container object
+	self.dataPlot = DataPlotter()
         # Initializes PSO algorithm values 
         
         # Inertia 
         self.w = 0.729
-        #self.w = 0.95
         # personal weight
         self.c1 = 1.49445
         # global weight
@@ -62,9 +59,6 @@ class ParticleSwarm():
         self.r1 = 0
         self.r2 = 0
         
-        # eval is an evaluation function that takes two floating point parameters.
-        self.eval = eval
-
         # Handles testing arguements
         self.numberIterations = numIterations
         self.iteration = 0
@@ -76,9 +70,9 @@ class ParticleSwarm():
         # Handles Initializing PSO space
         self.numParticles = numParticles
         self.particles = []
-        self.global_best_fitness = float('-inf')
+        self.global_best_fitness = float('inf')
         # self.global_best_position = np.array([randrange(minRange,maxRange,1)*0.01,randrange(minRange,maxRange,1)*0.01])
-        self.global_best_position = np.array([float('-inf'),float('-inf')])
+        self.global_best_position = np.array([float('inf'),float('inf')])
 
 	# Simply displays a list of particles and their position
     def display_particles(self):
@@ -87,9 +81,8 @@ class ParticleSwarm():
             
 	# The evaluation function
     def fitness_evaluation(self, particle):
-        #fitness = 3 + particle.position[0] ** 2 + particle.position[1]**2
-        #return fitness
-        return self.eval(particle.position[0], particle.position[1])
+        fitness = 3 + particle.position[0] ** 2 + particle.position[1]**2
+        return fitness
 
 	# Runs the evaluation function for every particle
     def eval_all(self):
@@ -100,18 +93,17 @@ class ParticleSwarm():
     def set_personal_best(self):
         for particle in self.particles:   
             # CHANGES IF YOU WANT TO FIND MINIMUM OR MAXIMUM
-            # it is set to maximum 
-            if (particle.fitness > particle.bestFitness):
+            # it is set to minimum 
+            if (particle.fitness < particle.bestFitness):
                 particle.bestFitness = particle.fitness
                 particle.bestPosition = particle.position
-		
                 
 	# Acquires the best position out of all particles
     def set_global_best(self):
         for particle in self.particles:      
             # CHANGES IF YOU WANT TO FIND MINIMUM OR MAXIMUM
-            # it is set to maximum 
-            if (particle.fitness > self.global_best_fitness):
+            # it is set to minimum 
+            if (particle.fitness < self.global_best_fitness):
                 self.global_best_fitness = particle.fitness
                 self.global_best_position = particle.position
             
@@ -137,12 +129,12 @@ class ParticleSwarm():
             self.set_global_best()
             self.move_particles()
             self.iteration += 1
-	    self.data.appendToList(self.iteration,self.global_best_fitness,"fitness")
+	    self.dataPlot.appendToList(self.iteration,self.global_best_fitness,"fitness")
             print("iteration number ", self.iteration)
             self.display_particles()
             print("\n")
 	
-	self.data.outputGraphs()
+	self.dataPlot.outputGraphs()
 
         print("The best position is ", self.global_best_position, "in iteration number ", self.iteration)
 
@@ -150,13 +142,12 @@ class ParticleSwarm():
 if __name__ == "__main__":
 
     # Setup the PSO algorithm and run
-    state_space = ParticleSwarm((lambda a, b : 300 + a ** 2 + b**2), 5, 100, -100, 100)
+    state_space = ParticleSwarm(5, 100, -100, 100)
     particles_vector = [Particle(-100, 100) for _ in range(state_space.numParticles)]
     state_space.particles = particles_vector
     state_space.display_particles()
     print("\n")
     state_space.algorithm()
-
 
 
 
