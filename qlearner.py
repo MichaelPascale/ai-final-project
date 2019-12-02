@@ -4,6 +4,7 @@
 # Implements a Q-learning agent class with methods to run learning sessions and return
 # performance statistics. Utilizes an OpenAI Gym as its environment (https://gym.openai.com/).
 import random
+import math
 
 class QLearner:
     # Initialize the q-learning agent to...
@@ -29,7 +30,7 @@ class QLearner:
     # Decides exploration-exploitation.
     # Returns an action; either does so randomly or by selecting maximum Q.
     def explore(self, epsilon):
-        if random.random() >= epsilon:
+        if random.random() <= epsilon:
             actions = [action for action in range(self.n_actions)]
             return random.choice(actions)
         else:
@@ -45,7 +46,7 @@ class QLearner:
     def run_episode(self, epsilon, alpha, gamma):
         self.s = self.env.reset()
         total_R = 0
-        for _ in range(self.n_steps):
+        for step in range(self.n_steps):
             self.a = self.explore(epsilon)
             s_, r_, done, _ = self.env.step(self.a)
             total_R += r_
@@ -59,17 +60,17 @@ class QLearner:
             self.s = s_
         
         #print(total_R)
-        return total_R #sum(sum(self.Q, []))
+        return total_R, step #sum(sum(self.Q, []))
 
 
     # Run a session of n_episodes.
-    def run_session(self, epsilon = 0.2, alpha = 0.9, gamma = 0.90):
+    def run_session(self, alpha, gamma):
         self.reset()
 
         # Return the average reward over all episodes.
         #print(self.run_episode(epsilon, alpha, gamma))
-        R = [self.run_episode(epsilon, alpha, gamma) for _ in range(self.n_episodes)]
-        avg = sum(R) / len(R)
+        R = [self.run_episode((0.01 + 0.99 * math.exp(-0.001 * i)), alpha, gamma)[0] for i in range(self.n_episodes)]
+        avg = sum(R[self.n_episodes-1000:]) / 1000#len(R)
         #print(R)
         return avg
 

@@ -14,7 +14,7 @@ q = qlearner.QLearner(e)
 
 # Setup the PSO algorithm and run
 qlearner
-pso = PSO.ParticleSwarm((lambda a, b : q.run_session(0.2, a, b)), 5, 100, 0.00, 1.00)
+pso = PSO.ParticleSwarm((lambda a, b : q.run_session(a, b)), 5, 100, 0.00, 1.00)
 particles = [PSO.Particle(0.00, 1.00) for _ in range(pso.numParticles)]
 pso.particles = particles
 pso.display_particles()
