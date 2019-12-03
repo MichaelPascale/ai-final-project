@@ -49,7 +49,6 @@ class ParticleSwarm():
         
         # Inertia 
         self.w = 0.729
-        #self.w = 0.95
         # personal weight
         self.c1 = 1.49445
         # global weight
