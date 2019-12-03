@@ -75,7 +75,7 @@ class QLearner:
         R = [self.run_episode(epsilon, alpha, gamma) for _ in range(self.n_episodes)]
         avg = sum(R) / len(R)
         self.data.appendQVal(avg, current, self.n_episodes)
-        self.data.outputGraphs()
+        self.data.outputQGraphs()
         return avg
 
 

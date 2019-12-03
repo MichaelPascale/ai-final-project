@@ -12,8 +12,9 @@ from dataplotter import DataPlotter
 class Particle():
 
 	# Initializes the particle itself
-    def __init__(self, minRange, maxRange):        
+    def __init__(self, minRange, maxRange, dataPlot):        
 	# self.position = np.array([randrange(minRange, maxRange, 1)*0.01,randrange(minRange, maxRange, 1)*0.01])
+        self.dataPlot = dataPlot
         self.position = np.array([randrange(minRange, maxRange, 1),randrange(minRange, maxRange, 1)])
         self.velocity = np.array([0,0])
         self.fitness = float("inf")
@@ -41,12 +42,13 @@ class Particle():
             value[1] = maximum
         elif value[1] < minimum:
             value[1] = minimum
+    def get_position(self):
+        return [self.position[0], self.position[1]]
             
 
 class ParticleSwarm():
-    def __init__(self, numParticles, numIterations, minRange, maxRange):
-	# Initializes the data container object
-	self.dataPlot = DataPlotter()
+    def __init__(self, numParticles, numIterations, minRange, maxRange,dataPlot):
+        self.dataPlot = dataPlot
         # Initializes PSO algorithm values 
         
         # Inertia 
@@ -77,6 +79,8 @@ class ParticleSwarm():
 	# Simply displays a list of particles and their position
     def display_particles(self):
         for particle in self.particles:
+            pos = particle.get_position()
+            dataPlot.appendToPositionList(pos[0],pos[1],self.iteration, self.numberIterations)
             particle.__str__()
             
 	# The evaluation function
@@ -129,25 +133,26 @@ class ParticleSwarm():
             self.set_global_best()
             self.move_particles()
             self.iteration += 1
-	    self.dataPlot.appendToList(self.iteration,self.global_best_fitness,"fitness")
+            self.dataPlot.appendToFitnessList(self.iteration,self.global_best_fitness)
             print("iteration number ", self.iteration)
             self.display_particles()
             print("\n")
-	
-	self.dataPlot.outputGraphs()
 
         print("The best position is ", self.global_best_position, "in iteration number ", self.iteration)
 
 
 if __name__ == "__main__":
 
+	# Initializes the data container object
+    dataPlot = DataPlotter()
     # Setup the PSO algorithm and run
-    state_space = ParticleSwarm(5, 100, -100, 100)
-    particles_vector = [Particle(-100, 100) for _ in range(state_space.numParticles)]
+    state_space = ParticleSwarm(5, 100, -100, 100,dataPlot)
+    particles_vector = [Particle(-100, 100,dataPlot) for _ in range(state_space.numParticles)]
     state_space.particles = particles_vector
     state_space.display_particles()
     print("\n")
     state_space.algorithm()
+    dataPlot.outputPSOGraphs()
 
 
 
