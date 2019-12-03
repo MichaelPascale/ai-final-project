@@ -15,7 +15,7 @@ class Particle():
         seed()
         # self.position = np.array([randrange(minRange, maxRange, 1)*0.01,randrange(minRange, maxRange, 1)*0.01])
         self.position = np.array([uniform(minRange, maxRange), uniform(minRange, maxRange)])
-        self.velocity = np.array([0,0])
+        self.velocity = np.array([uniform(-1, 1), uniform(-1, 1)])
         self.fitness = float("-inf")
         self.bestPosition = self.position
         self.bestFitness = float('-inf')
@@ -48,12 +48,21 @@ class ParticleSwarm():
         # Initializes PSO algorithm values 
         
         # Inertia 
-        self.w = 0.729
-        #self.w = 0.95
+        # self.w = 0.729
+        self.w = 0.90
+        self.w_min = 0.40
+        self.w_max = 0.90
+
         # personal weight
-        self.c1 = 1.49445
+        # self.c1 = 1.49445
+        self.c1 = 2.5 
+        self.c1i = 2.5
+        self.c1f = 0.5
         # global weight
-        self.c2 = 1.49445
+        self.c2 = 0.5
+        self.c2i = 0.5
+        self.c2f = 2.5
+        # self.c2 = 1.49445
         # Random variables (helps with getting stuck)
         self.r1 = 0
         self.r2 = 0
@@ -67,8 +76,8 @@ class ParticleSwarm():
         self.minX = minRange
         self.maxX = maxRange
 
-        self.minV = minRange
-        self.maxV = maxRange        
+        self.minV = -1
+        self.maxV = 1      
         # Handles Initializing PSO space
         self.numParticles = numParticles
         self.particles = []
@@ -123,11 +132,22 @@ class ParticleSwarm():
             particle.check_range(new_velocity, self.minV, self.maxV)
 
             particle.velocity = new_velocity
+            
             particle.move()
+
+
+    # updates parameters necessary for PSO
+    def update_parameters(self):
+        # slowly decreases inertia based on iteration number 
+        self.w = self.w_max - ((self.w_max - self.w_min)/self.numberIterations)*self.iteration
+        self.c1 = self.c1i - ((self.c1f - self.c1i)/self.numberIterations)*self.iteration
+        self.c2 = self.c2i - ((self.c2f - self.c2i)/self.numberIterations)*self.iteration
+
 
 	# The algorithm itself, follows flow chart on proposoal
     def algorithm(self):
         while(self.iteration < self.numberIterations):
+            self.update_parameters()
             self.eval_all()
             self.set_personal_best()
             self.set_global_best()
