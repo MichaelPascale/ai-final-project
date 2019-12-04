@@ -46,6 +46,11 @@ class Particle():
 class ParticleSwarm():
     def __init__(self, eval, numParticles, numIterations, minRange, maxRange):
         # Initializes PSO algorithm values 
+
+        # Used to store Data
+        # iteration : List of Particles
+        # where particle is (X,Y)
+        self.particlesByIteration = dict()
         
         # Inertia 
         self.w = 0.729
@@ -79,6 +84,19 @@ class ParticleSwarm():
     def display_particles(self):
         for particle in self.particles:
             particle.__str__()
+
+
+	# Simply displays a list of particles and their position
+    def store_particle_data(self, i):
+        # A particle contains ( X, Y )
+        listOfParticles = list()
+        for particle in self.particles:
+            p = (particle.position[0], particle.position[1])
+            listOfParticles.append(p)
+        print("the list is: ", listOfParticles)
+        self.particlesByIteration[i] = listOfParticles
+        print("the dict is: ", self.particlesByIteration, "\n")
+            
             
 	# The evaluation function
     def fitness_evaluation(self, particle):
@@ -126,6 +144,9 @@ class ParticleSwarm():
 
 	# The algorithm itself, follows flow chart on proposoal
     def algorithm(self):
+        # Gets starting particles, iteration 0
+        self.store_particle_data(self.iteration)
+
         while(self.iteration < self.numberIterations):
             self.eval_all()
             self.set_personal_best()
@@ -135,8 +156,11 @@ class ParticleSwarm():
             print("iteration number ", self.iteration)
             self.display_particles()
             print("\n")
+            self.store_particle_data(self.iteration)
 
         print("The best position is ", self.global_best_position, "in iteration number ", self.iteration)
+        print("\n")
+        return self.particlesByIteration
 
 
 """ if __name__ == "__main__":

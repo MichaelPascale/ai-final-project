@@ -14,11 +14,12 @@ q = qlearner.QLearner(e, 10000, 100)
 # -a ** 2 -b **2
 
 # Setup the PSO algorithm and run
-pso = PSO.ParticleSwarm((lambda a, b : q.run_session(a, b)), 5, 100, 0.00, 1.00)
+pso = PSO.ParticleSwarm((lambda a, b : q.run_session(a, b)), 2, 3, 0.00, 1.00)
 pso.minV = -1
 pso.maxV = 1 
 particles = [PSO.Particle(0.00, 1.00) for _ in range(pso.numParticles)]
 pso.particles = particles
 pso.display_particles()
 print("\n")
-pso.algorithm()
+pso_data = pso.algorithm()
+print("Resulting Data From PSO: ", pso_data)

@@ -8,7 +8,7 @@ import math
 
 class QLearner:
     # Initialize the q-learning agent to...
-    def __init__(self, env, episodes = 2000, steps_per_episode = 100):
+    def __init__(self, env, episodes = 10000, steps_per_episode = 100):
         random.seed()
 
         self.env = env
