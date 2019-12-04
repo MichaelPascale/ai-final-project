@@ -138,12 +138,12 @@ class ParticleSwarm():
             self.set_global_best()
             self.move_particles()
             self.iteration += 1
-            self.data.appendToList(self.iteration,self.global_best_fitness,"fitness")
+            self.dataPlot.appendToFitnessList(self.iteration,self.global_best_fitness)
             print("iteration number ", self.iteration)
             self.display_particles()
             print("\n")
 	
-        self.data.outputGraphs()
+        self.dataPlot.outputGraphs()
 
         print("The best position is ", self.global_best_position, "in iteration number ", self.iteration)
 
