@@ -143,7 +143,7 @@ class ParticleSwarm():
             self.display_particles()
             print("\n")
 	
-        self.dataPlot.outputGraphs()
+        self.dataPlot.outputPSOGraphs()
 
         print("The best position is ", self.global_best_position, "in iteration number ", self.iteration)
 
