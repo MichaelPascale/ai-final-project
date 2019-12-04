@@ -147,6 +147,8 @@ class ParticleSwarm():
 
         print("The best position is ", self.global_best_position, "in iteration number ", self.iteration)
 
+        return self.global_best_position
+
 
 
 
