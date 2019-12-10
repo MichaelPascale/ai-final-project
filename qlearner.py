@@ -46,6 +46,7 @@ class QLearner:
     def run_episode(self, epsilon, alpha, gamma):
         self.s = self.env.reset()
         total_R = 0
+
         for step in range(self.n_steps):
             self.a = self.explore(epsilon)
             s_, r_, done, _ = self.env.step(self.a)
@@ -68,11 +69,12 @@ class QLearner:
         self.reset()
 
         # Return the average reward over all episodes.
-        #print(self.run_episode(epsilon, alpha, gamma))
+        #print(self.run_episode(epsilon, alpha, gamma))        
+
         R = [self.run_episode((0.01 + 0.99 * math.exp(-0.001 * i)), alpha, gamma)[0] for i in range(self.n_episodes)]
-        avg = sum(R[self.n_episodes-1000:]) / 1000#len(R)
+        #avg = sum(R[self.n_episodes-1000:]) / 1000#len(R)
         #print(R)
-        return avg
+        return R    # Return list of rewards over all episodes.
 
 
     # Reset the agent to zero-knowledge.
