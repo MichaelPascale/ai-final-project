@@ -6,6 +6,7 @@
 import qlearner
 import PSO
 import gym
+import dataplotter
 
 e = gym.make('FrozenLake-v0')
 q = qlearner.QLearner(e)
@@ -20,3 +21,4 @@ pso.particles = particles
 pso.display_particles()
 print("\n")
 pso.algorithm()
+pso.outputGraphs()

@@ -47,6 +47,7 @@ class QLearner:
         self.s = self.env.reset()
         total_R = 0
         for current in range(self.n_steps):
+            print current
             self.a = self.explore(epsilon)
             s_, r_, done, _ = self.env.step(self.a)
             total_R += r_
@@ -62,7 +63,8 @@ class QLearner:
         #print(total_R)
         return total_R #sum(sum(self.Q, []))
 
-
+    def outputGraphs(self):
+	self.data.outputQGraphs()
     # Run a session of n_episodes.
     def run_session(self, epsilon = 0.2, alpha = 0.9, gamma = 0.90):
         self.reset()
@@ -75,7 +77,6 @@ class QLearner:
         R = [self.run_episode(epsilon, alpha, gamma) for _ in range(self.n_episodes)]
         avg = sum(R) / len(R)
         self.data.appendQVal(avg, current, self.n_episodes)
-        self.data.outputQGraphs()
         return avg
 
 

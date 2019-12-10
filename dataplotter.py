@@ -28,8 +28,8 @@ class DataPlotter:
         self.particleListx = []
         self.particleListy = []
         self.particleListMapping = []
-        self.qValx = []
-        self.qValy = []
+        self.qVal1Initialx = []
+        self.qValInitialy = []
         self.qStep = 0
         self.iterationStep = 0
         self.maxIteration = 0
@@ -57,17 +57,26 @@ class DataPlotter:
         pyplot.show()
 
     def outputQGraphs(self):
-        qPlot = pyplot.figure()
-        qPlot.suptitle("Q Values vs Iterations")
+        #initial q learning data
+        qPlot1 = pyplot.figure()
+        qPlot1.suptitle("Initial Q Values vs Iterations")
         pyplot.ylabel("Q Values")
         pyplot.xlabel("Iteration Number")
         pyplot.scatter(self.qValx,self.qValy)
 
-    def appendQVal(self, valy, episodex, n_step):
-        self.qStep = n_step
-        #if (episodex % n_step) is 0:
-        self.qValx.append(episodex)
-        self.qValy.append(valy)
+        #final q learning data
+        qPlot2 = pyplot.figure()
+        qPlot2.subtitle("Final Q Values vs Iterations")
+        pyplot.ylabel("Q Values")
+        pyplot.xlabel("Iteration Number")
+        
+
+    def appendQVal(self, valy, episodex):
+        self.qValInitialx.append(episodex)
+        self.qValInitialy.append(valy)
+
+    def qStep(self, isFirstOrLast):
+        self.qStep = isFirstOrLast;
 
     def appendToFitnessList(self, xVal,yVal):
         self.fitnessIterationx.append(xVal)
