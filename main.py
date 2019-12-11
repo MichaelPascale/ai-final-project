@@ -18,14 +18,12 @@ q = qlearner.QLearner(e, episodes, 100)
 # -a ** 2 -b **2
 
 # Setup the PSO algorithm and run
-alpha = random.random()
-gamma = random.random()
+
 # list of lengthh 10000, 1 or 0. More 1s towards end of list.
 # to graph, look at average over some increment.
 # for example, graph the average over the first 1000 episodes, then the next.
 # avg will be number in [0, 1]. This corresponds to "fitness"
-alpha, gamma = 0.0784738, 0.98051467
-IR = [q.run_session(alpha, gamma) for _ in range(30)]
+IR = [q.run_session(random.random(), random.random()) for _ in range(30)]
 IRAvg = sum([sum(i[-1000:])/1000 for i in IR])/30
 
 InitialRewardPerEpisode = IR
