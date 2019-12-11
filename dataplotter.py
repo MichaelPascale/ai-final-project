@@ -28,13 +28,15 @@ class DataPlotter:
         self.particleListx = []
         self.particleListy = []
         self.particleListMapping = []
-        self.qValx = []
-        self.qValy = []
+        self.qIValx = []
+        self.qIValy = []
+        self.qFValx = []
+        self.qFValy = []
         self.qStep = 0
         self.iterationStep = 0
         self.maxIteration = 0
 
-    def outputPSOGraphs(self):
+    def outputGraphs(self):
         fitnessPlot = pyplot.figure()
         fitnessPlot.suptitle("Fitness Function Value vs Iterations")
         pyplot.scatter(self.fitnessIterationx,self.fitnessIterationy)
@@ -49,25 +51,43 @@ class DataPlotter:
         pyplot.yscale("log")
 
         particlePlot = pyplot.figure()
-        particlePlot.suptitle("Particle position")
+        particlePlot.suptitle("Particle Position")
         pyplot.scatter(self.particleListx,self.particleListy, c=self.particleListMapping, cmap="plasma")
         positionBar = pyplot.colorbar()
         positionBar.set_label("Iteration")
-        print(self.particleListMapping)
         pyplot.show()
 
-    def outputQGraphs(self):
-        qPlot = pyplot.figure()
-        qPlot.suptitle("Q Values vs Iterations")
-        pyplot.ylabel("Q Values")
+        qIPlot = pyplot.figure()
+        qIPlot.suptitle("Random Parameters Q-Learning, Rewards vs Iterations")
+        pyplot.ylabel("R")
         pyplot.xlabel("Iteration Number")
-        pyplot.scatter(self.qValx,self.qValy)
+        self.qIValx.sort()
+        self.qIValy.sort()
+        pyplot.plot(self.qIValx,self.qIValy)
+        pyplot.show()
 
-    def appendQVal(self, valy, episodex, n_step):
-        self.qStep = n_step
-        #if (episodex % n_step) is 0:
-        self.qValx.append(episodex)
-        self.qValy.append(valy)
+        qFPlot = pyplot.figure()
+        qFPlot.suptitle("Tuned Parameters Q-Learning, Rewards vs Iterations")
+        pyplot.ylabel("R")
+        pyplot.xlabel("Iteration Number")
+        self.qFValx.sort()
+        self.qFValy.sort()
+        pyplot.plot(self.qFValx,self.qFValy)
+        pyplot.show()
+
+    def appendqlRVals(self, init_list, f_list):
+
+        for IR in init_list:
+            for i in range(len(IR)):
+                if i % 10 and i > 0:
+                    self.qIValx.append(i)
+                    self.qIValy.append(sum(IR[i-10:i])/10)
+        
+        for FR in f_list:
+            for i in range(len(FR)):
+                if i % 10 and i > 0:
+                    self.qFValx.append(i)
+                    self.qFValy.append(sum(FR[i-10:i])/10)
 
     def appendToFitnessList(self, xVal,yVal):
         self.fitnessIterationx.append(xVal)
