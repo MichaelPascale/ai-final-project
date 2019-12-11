@@ -61,17 +61,22 @@ class DataPlotter:
         qIPlot.suptitle("Random Parameters Q-Learning, Rewards vs Iterations")
         pyplot.ylabel("R")
         pyplot.xlabel("Iteration Number")
-        pyplot.scatter(self.qIValx,self.qIValy)
+        self.qIValx.sort()
+        self.qIValy.sort()
+        pyplot.plot(self.qIValx,self.qIValy)
         pyplot.show()
 
         qFPlot = pyplot.figure()
         qFPlot.suptitle("Tuned Parameters Q-Learning, Rewards vs Iterations")
         pyplot.ylabel("R")
         pyplot.xlabel("Iteration Number")
-        pyplot.scatter(self.qFValx,self.qFValy)
+        self.qFValx.sort()
+        self.qFValy.sort()
+        pyplot.plot(self.qFValx,self.qFValy)
         pyplot.show()
 
     def appendqlRVals(self, init_list, f_list):
+
         for IR in init_list:
             for i in range(len(IR)):
                 if i % 10 and i > 0:
